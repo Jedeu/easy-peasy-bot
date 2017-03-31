@@ -85,8 +85,118 @@ controller.on('bot_channel_join', function (bot, message) {
     bot.reply(message, "I'm here!")
 });
 
-controller.hears('hello', 'direct_message', function (bot, message) {
-    bot.reply(message, 'Hello!');
+controller.hears(['show pending asset'], ['direct_message', 'direct_mention'], function(bot,message) {
+    bot.reply(message, {
+            'attachments': [
+                {
+                    'color': "1e89c0",
+                    'title': "A New Asset Has Been Uploaded!",
+                    'title_link': "https://demojed.mediavalet.com/browse/categories/fd10afc3-1b8d-4cd5-a2eb-0f95f53cfb6f/0d0d03c7-5ff3-4190-a730-a4c9bf1f4d9f",
+                    'text': "Please review and approve or deny the content",
+                    'callback_id': '123',
+                    'attachment_type': 'default',
+                    'image_url': "https://mediavaletteststorage.blob.core.windows.net/medialibrary-02-5f0ed843-5603-41ed-a794-f406a247aec8-r/0cce7468-384a-42ff-b693-cb3dfbdaefd2/0d0d03c7-5ff3-4190-a730-a4c9bf1f4d9f/4/pomsky.jpg?sv=2012-02-12&se=2027-03-31T03:25:12Z&sr=b&sp=r&sig=IbgOiulwYuox2xQQ0eNW07l85l90HL9mL%2Fj635mGohg%3D",
+                    "fields": [
+                    {
+                        "title": "Title",
+                        "value": "Pomsky",
+                        "short": true
+                    },
+                    {
+                        "title": "File Name",
+                        "value": "Pomsky.jpg",
+                        "short": true
+                    },
+                    {
+                        "title": "Description",
+                        "value": "An adorable spotted puppy",
+                        "short": true
+                    },
+                    {
+                        "title": "Categories",
+                        "value": "Pets",
+                        "short": true
+                    },
+                    {
+                        "title": "Keywords",
+                        "value": "Husky, Pomeranian, Pomsky",
+                        "short": true
+                    }
+                ],
+                'ts': 1490894652,
+                'actions': [
+                    {
+                        "name": "approve",
+                        "text": "Approve",
+                        "type": "button",
+                        "style": "primary",
+                        "value": "approve"
+                    },
+                    {
+                        "name": "reject",
+                        "text": "Reject",
+                        "type": "button",
+                        "style": "danger",
+                        "value": "reject"
+                    }
+                ]
+            }
+        ]
+    });
+});
+
+controller.on('interactive_message_callback', function(bot, message) {
+
+    // check message.actions and message.callback_id to see what action to take...
+    var result = message.actions[0].value == 'approve' ? ':white_check_mark: You have approved this asset' : ':negative_squared_cross_mark: You have denied this asset';
+
+    bot.replyInteractive(message, {
+        'attachments': [
+            {
+                'color': "1e89c0",
+                'title': "A New Asset Has Been Uploaded!",
+                'title_link': "https://demojed.mediavalet.com/browse/categories/fd10afc3-1b8d-4cd5-a2eb-0f95f53cfb6f/0d0d03c7-5ff3-4190-a730-a4c9bf1f4d9f?count=25&offset=0&sort=title%20A",
+                'text': "Please review and approve or deny the content",
+                'callback_id': '123',
+                'attachment_type': 'default',
+                'image_url': "https://mediavaletteststorage.blob.core.windows.net/medialibrary-02-5f0ed843-5603-41ed-a794-f406a247aec8-r/0cce7468-384a-42ff-b693-cb3dfbdaefd2/0d0d03c7-5ff3-4190-a730-a4c9bf1f4d9f/4/pomsky.jpg?sv=2012-02-12&se=2027-03-31T03:25:12Z&sr=b&sp=r&sig=IbgOiulwYuox2xQQ0eNW07l85l90HL9mL%2Fj635mGohg%3D",
+                "fields": [
+                    {
+                        "title": "Title",
+                        "value": "Pomsky",
+                        "short": true
+                    },
+                    {
+                        "title": "File Name",
+                        "value": "Pomsky.jpg",
+                        "short": true
+                    },
+                    {
+                        "title": "Description",
+                        "value": "An adorable spotted puppy",
+                        "short": true
+                    },
+                    {
+                        "title": "Categories",
+                        "value": "Pets",
+                        "short": true
+                    },
+                    {
+                        "title": "Keywords",
+                        "value": "Husky, Pomeranian, Pomsky",
+                        "short": true
+                    }
+                ],
+            },
+            {
+                'color': "1e89c0",
+                'title': result,
+                'mrkdwn': true,
+            }
+        ]
+    });
+    
+
 });
 
 
